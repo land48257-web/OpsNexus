@@ -1,0 +1,63 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test-and-build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Check out source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Go
+        uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version-file: go.mod
+          check-latest: true
+          cache-dependency-path: go.sum
+
+      - name: Set up Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+
+      # Go compilation requires the resources embedded from web/dist.
+      - name: Build frontend
+        run: make build-web
+
+      - name: Lint and test frontend
+        working-directory: web
+        run: |
+          npm run lint
+          npm test
+
+      - name: Test Go packages with race detection
+        run: go test -race ./...
+
+      # Full-driver findings remain documented; application checks are required.
+      - name: Vet application packages
+        run: make vet
+
+      - name: Cross-compile release targets
+        env:
+          CGO_ENABLED: "0"
+        run: |
+          mkdir -p dist
+          GOOS=linux GOARCH=amd64 go build -trimpath -o dist/opsnexus-linux-amd64 ./cmd/server
+          GOOS=linux GOARCH=arm64 go build -trimpath -o dist/opsnexus-linux-arm64 ./cmd/server
+          GOOS=windows GOARCH=amd64 go build -trimpath -o dist/opsnexus-windows-amd64.exe ./cmd/server

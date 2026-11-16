@@ -1,0 +1,67 @@
+# Local configuration and credentials (keep examples and test fixtures tracked)
+/config.yaml
+/config.yml
+/config.*.yaml
+/config.*.yml
+!/config.yaml.example
+.env
+.env.*
+!.env.example
+!.env.*.example
+*.pem
+*.key
+*.p12
+*.pfx
+id_rsa
+id_ed25519
+
+# Go executables, build output and local workspaces
+/opsnexus
+/opsnexus.exe
+/dist/
+/bin/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.prof
+/go.work
+/go.work.sum
+
+# Frontend dependencies, bundles and generated TypeScript files
+node_modules/
+/web/dist/
+*.tsbuildinfo
+/web/vite.config.js
+/web/vite.config.d.ts
+.vite/
+.cache/
+
+# Tests, logs and temporary runtime files
+coverage/
+coverage.out
+coverage.xml
+*.log
+playwright-report/
+test-results/
+/tmp/
+/logs/
+
+# Local editor and assistant state
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+/.shared/
+/.gemini/
+/.codex/
+/.claude/
+
+# Operating system metadata
+.DS_Store
+._*
+Thumbs.db
+Desktop.ini

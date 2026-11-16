@@ -1,0 +1,40 @@
+name: Bug report / 问题反馈
+description: Report a reproducible problem / 提交可复现的问题
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use synthetic assets and remove credentials from logs and screenshots.
+        请使用演示资产，并删除日志和截图中的凭证。疑似安全漏洞请按 SECURITY.md 私密报告。
+  - type: input
+    id: version
+    attributes:
+      label: Version or commit / 版本或提交
+      placeholder: Commit SHA or release tag
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment / 运行环境
+      description: OS, browser, database type/version, root or subpath deployment; Go/Node versions if built from source.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to reproduce / 复现步骤
+      description: Include a minimal example with synthetic data / 附使用模拟数据的最小示例。
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected and actual behavior / 预期与实际行为
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Redacted logs or screenshots / 脱敏日志或截图
+      description: Do not attach config.yaml, tokens, passwords, or private keys.

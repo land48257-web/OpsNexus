@@ -1,0 +1,62 @@
+log_level: info
+# Root deployment. For /devops, also build with VITE_BASE_PATH=/devops/.
+base_path: ""
+security:
+  admin_users:
+    - username: admin
+      # Plaintext is hashed in memory; valid $2a$/$2b$/$2y$ bcrypt is also accepted.
+      password: change-me
+  # Replace before running, or set OPSNEXUS_SECURITY_JWT_SECRET.
+  # Generate a new value with: openssl rand -hex 32
+  jwt_secret: change-this-to-a-secure-random-secret
+  # Fixed JWT lifetime and browser idle timeout; 1-1440 minutes.
+  session_timeout_minutes: 30
+server_address: :8080
+
+assets:
+  groups:
+    - name: "Default Assets"
+      servers:
+        - id: "srv-01"
+          name: "Linux Server (SSH)"
+          host: "localhost"
+          port: 22
+          user: "your-username"
+          # Password authentication (choose one)
+          password: "your-password"
+          # Key authentication (choose one; absolute paths are recommended)
+          # private_key_path: "/path/to/your/private/key"
+      databases:
+        - id: "db-mysql"
+          name: "MySQL Database"
+          type: "mysql"
+          host: "localhost"
+          port: 3306
+          user: "root"
+          password: "your-password"
+          database: "your-database"
+
+        - id: "db-redis"
+          name: "Redis Cache"
+          type: "redis"
+          host: "localhost"
+          port: 6379
+          # user: "default" # Optional Redis ACL username
+          password: "your-password"
+          database: "0"
+
+        - id: "db-mongo"
+          name: "MongoDB"
+          type: "mongo"
+          # URI supports authSource, replicas, TLS, etc. and is never returned by the asset API.
+          # Alternatively configure host, port, user, password and database.
+          uri: "mongodb://user:password@localhost:27017/?authSource=admin"
+
+        - id: "db-dm"
+          name: "Dameng (DM8)"
+          type: "dm"
+          host: "localhost"
+          port: 5236
+          user: "SYSDBA"
+          password: "your-password"
+          database: "SYSDBA" # DM schema, not a MySQL-style database name
